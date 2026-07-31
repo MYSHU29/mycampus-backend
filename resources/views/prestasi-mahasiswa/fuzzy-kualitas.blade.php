@@ -575,6 +575,8 @@
 @push('scripts')
 <script>
 (function() {
+    Chart.defaults.color = '#8b949e';
+    Chart.defaults.borderColor = '#21262d';
     var kualitasLabels = ['Sangat Baik', 'Baik', 'Cukup', 'Kurang'];
     var kualitasData = [
         {{ $rekapKualitas['Sangat Baik'] }},

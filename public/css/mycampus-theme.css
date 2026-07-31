@@ -988,3 +988,34 @@ hr {
     border-color: var(--mycampus-border);
     color: var(--mycampus-text);
 }
+
+/* ============================================
+   Dark Polish — sisa elemen Bootstrap terang
+   ============================================ */
+
+/* Tabel polos (tanpa .table-bordered) — Bootstrap default border atas #dee2e6 */
+.table td,
+.table th {
+    border-top: 1px solid var(--mycampus-border);
+}
+
+.table-borderless td,
+.table-borderless th {
+    border: 0;
+}
+
+/* Judul header card yang memakai .text-primary → cyan (selaras landing) */
+.text-primary {
+    color: var(--mycampus-primary) !important;
+}
+
+.text-primary:hover,
+.text-primary:focus {
+    color: var(--mycampus-primary-light) !important;
+}
+
+/* Warna teks kartu lainnya agar terbaca di bg gelap */
+.text-danger { color: #fca5a5 !important; }
+.text-success { color: #6ee7b7 !important; }
+.text-warning { color: #fcd34d !important; }
+.text-info { color: #7dd3fc !important; }

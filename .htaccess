@@ -9,6 +9,10 @@
     RewriteRule ^apk/?$ public/apk/index.html [L,QSA]
     RewriteRule ^apk/(.+)$ public/apk/$1 [L,QSA]
 
+    # Serve public/ static assets (CSS) and storage uploads
+    RewriteRule ^css/(.+)$ public/css/$1 [L,QSA]
+    RewriteRule ^storage/(.+)$ public/storage/$1 [L,QSA]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

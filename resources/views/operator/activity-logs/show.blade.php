@@ -159,7 +159,7 @@
                             </div>
                             <div class="card-body">
                                 <p><strong>User Agent:</strong></p>
-                                <code style="word-break: break-all; display: block; background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                                <code style="word-break: break-all; display: block; background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: 10px; border-radius: 4px;">
                                     {{ $activityLog->user_agent ?? '-' }}
                                 </code>
                             </div>
@@ -176,7 +176,7 @@
                                     <h6 class="m-0 font-weight-bold text-danger">Data Sebelumnya</h6>
                                 </div>
                                 <div class="card-body">
-                                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; max-height: 400px; overflow-y: auto;">{{ json_encode($activityLog->data_before, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                    <pre style="background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: 15px; border-radius: 4px; max-height: 400px; overflow-y: auto;">{{ json_encode($activityLog->data_before, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                                     <h6 class="m-0 font-weight-bold text-success">Data Sesudahnya</h6>
                                 </div>
                                 <div class="card-body">
-                                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px; max-height: 400px; overflow-y: auto;">{{ json_encode($activityLog->data_after, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                    <pre style="background: #0d1117; border: 1px solid #30363d; color: #e6edf3; padding: 15px; border-radius: 4px; max-height: 400px; overflow-y: auto;">{{ json_encode($activityLog->data_after, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                 </div>
                             </div>
                         </div>
