@@ -75,8 +75,10 @@
       transition: color 0.2s, background 0.2s;
     }
     .nav-links a:hover { color: var(--primary); background: rgba(0, 240, 255, 0.06); }
+    .nav-links a.active-link { color: var(--primary); background: rgba(0, 240, 255, 0.06); }
 
     main { position: relative; }
+    main section[id], #demo { scroll-margin-top: 86px; }
 
     /* Sections */
     .section { max-width: 1140px; margin: 0 auto; padding: 96px 24px; }
@@ -192,6 +194,20 @@
       color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 14px 0;
     }
     .short-input input::placeholder { color: var(--muted-2); }
+    .short-input:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.12); }
+    .short-err { display: none; margin-top: 10px; font-size: 12px; color: var(--danger); font-family: 'JetBrains Mono', monospace; }
+    .short-err.show { display: block; }
+    .visit-msg { display: none; margin-top: 10px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; word-break: break-all; }
+    .visit-msg.show { display: block; }
+    .visit-msg b { color: var(--primary); font-weight: 700; }
+    .recent { display: none; margin-top: 14px; flex-direction: column; gap: 6px; border-top: 1px dashed var(--border); padding-top: 12px; }
+    .recent.show { display: flex; }
+    .recent .r-head { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
+    .recent .r-item { display: flex; justify-content: space-between; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; padding: 9px 12px; font-size: 12px; }
+    .recent .r-url { display: flex; align-items: center; gap: 6px; color: var(--primary); min-width: 0; }
+    .recent .r-url a { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent .r-url a:hover { text-decoration: underline; }
+    .recent .r-orig { color: var(--muted-2); font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%; }
     .short-btn {
       background: var(--primary); color: #0A0A1A; border: none; border-radius: 12px;
       font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px;
@@ -207,7 +223,9 @@
     .short-result .sr-url {
       flex: 1; min-width: 180px; font-family: 'JetBrains Mono', monospace;
       color: var(--success); font-size: 15px; font-weight: 700; word-break: break-all;
+      text-decoration: none; cursor: pointer;
     }
+    .short-result .sr-url:hover { text-decoration: underline; }
     .btn-copy {
       background: transparent; border: 1px solid rgba(52, 211, 153, 0.4);
       color: var(--success); border-radius: 8px; padding: 8px 14px; cursor: pointer;
@@ -342,6 +360,7 @@
     .perm-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; display: flex; align-items: center; gap: 5px; }
     .perm-yes { color: var(--success); }
     .perm-no { color: var(--muted-2); }
+    .perm-na { color: var(--muted-2); font-family: 'JetBrains Mono', monospace; font-weight: 700; opacity: 0.55; }
     .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
     .perm-yes .dot { background: var(--success); }
     .perm-no .dot { background: var(--muted-2); }
@@ -452,9 +471,23 @@
     .delay-2 { transition-delay: 0.16s; }
     .delay-3 { transition-delay: 0.24s; }
 
+    /* Back to top */
+    #topBtn {
+      position: fixed; right: 22px; bottom: 22px; z-index: 60;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--card); border: 1px solid var(--border); color: var(--primary);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      opacity: 0; visibility: hidden; transform: translateY(10px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s, border-color 0.2s;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    #topBtn:hover { border-color: var(--primary); }
+    #topBtn.show { opacity: 1; visibility: visible; transform: none; }
+
     @media (max-width: 640px) {
       .section { padding: 72px 18px; }
       .m-dash { grid-template-columns: 1fr; }
+      .gal-stage { min-height: auto; }
       .hero-cta .btn { width: 100%; justify-content: center; }
       .short-row { flex-direction: column; }
       .short-btn { padding: 14px; }
@@ -471,6 +504,7 @@
         Ringkas<span class="cyan">URL</span>
       </a>
       <div class="nav-links">
+        <a href="#demo">Demo</a>
         <a href="#tentang">Tentang</a>
         <a href="#fitur">Fitur</a>
         <a href="#galeri">Galeri</a>
@@ -499,10 +533,11 @@
       </p>
       <div class="hero-cta fade-up delay-2">
         <a href="#galeri" class="btn btn-primary">Lihat Galeri UI</a>
+        <a href="#demo" class="btn btn-ghost">Coba Demo</a>
         <a href="#api" class="btn btn-ghost">Dokumentasi API</a>
       </div>
 
-      <div class="hero-demo fade-up delay-3">
+      <div class="hero-demo fade-up delay-3" id="demo">
         <div class="demo-card">
           <div class="demo-label"><span class="dot"></span> Demo interaktif &mdash; coba ringkas tautan</div>
           <div class="short-row">
@@ -512,10 +547,15 @@
             </div>
             <button class="short-btn" id="shortBtn">Ringkas!</button>
           </div>
+          <div class="short-err" id="shortErr"></div>
           <div class="short-result" id="shortResult">
-            <span class="sr-url" id="shortOut"></span>
+            <a href="#" class="sr-url" id="shortOut" data-short="" data-orig=""></a>
             <button class="btn-copy" id="copyBtn">Salin</button>
             <span class="sr-clicks">Klik simulasi: <b id="clickCount">0</b></span>
+          </div>
+          <div class="visit-msg" id="visitMsg"></div>
+          <div class="recent" id="recentBox">
+            <span class="r-head">Tautan Baru Saja Dibuat</span>
           </div>
         </div>
         <div class="demo-note">&lowast; Demo frontend saja &mdash; tautan dibuat &amp; dilacak di browser Anda</div>
@@ -826,6 +866,10 @@
     <div class="footer-copy">&copy; 2026 RingkasURL &middot; Landasan Proyek Pemendek Tautan</div>
   </footer>
 
+  <button id="topBtn" aria-label="Kembali ke atas">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
   <script>
     var ICONS = {
       link: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
@@ -852,19 +896,28 @@
     }
     var currentClicks = 0;
     var clickTimer = null;
+    var recentLinks = [];
 
     function doShorten() {
-      var val = document.getElementById('shortUrl').value.trim();
-      if (!val) {
-        document.getElementById('shortUrl').focus();
+      var input = document.getElementById('shortUrl');
+      var err = document.getElementById('shortErr');
+      var val = input.value.trim();
+      var cleaned = val.replace(/^[a-z]+:\/\//i, '');
+      if (!val || /\s/.test(cleaned) || !/\./.test(cleaned)) {
+        err.textContent = val ? 'Format URL tidak valid. Contoh: contoh.com/halaman' : 'Masukkan tautan terlebih dahulu.';
+        err.classList.add('show');
+        input.focus();
         return;
       }
-      var normalized = /^[a-z]+:\/\//i.test(val) ? val : 'https://' + val;
-      var host = 'rk.id';
-      var out = host + '/' + genSlug(6);
-      var res = document.getElementById('shortResult');
-      document.getElementById('shortOut').textContent = out;
-      res.style.display = 'flex';
+      err.classList.remove('show');
+      var url = /^[a-z]+:\/\//i.test(val) ? val : 'https://' + val;
+      var out = 'https://rk.id/' + genSlug(6);
+      var outEl = document.getElementById('shortOut');
+      outEl.textContent = out;
+      outEl.setAttribute('data-short', out);
+      outEl.setAttribute('data-orig', url);
+      document.getElementById('visitMsg').classList.remove('show');
+      document.getElementById('shortResult').style.display = 'flex';
       document.getElementById('copyBtn').innerHTML = ICONS.copy + ' Salin';
       currentClicks = 0;
       document.getElementById('clickCount').textContent = '0';
@@ -872,8 +925,34 @@
       clickTimer = setInterval(function () {
         currentClicks += Math.floor(Math.random() * 4);
         document.getElementById('clickCount').textContent = currentClicks;
-      }, 1200);
-      void normalized;
+      }, 1100);
+      setTimeout(function () { if (clickTimer) { clearInterval(clickTimer); clickTimer = null; } }, 16000);
+      recentLinks.unshift({ short: out, orig: url });
+      if (recentLinks.length > 3) recentLinks.pop();
+      renderRecent();
+      input.value = '';
+    }
+
+    function visitShort(short) {
+      var item = null;
+      for (var i = 0; i < recentLinks.length; i++) if (recentLinks[i].short === short) item = recentLinks[i];
+      if (!item) return;
+      currentClicks++;
+      document.getElementById('clickCount').textContent = currentClicks;
+      document.getElementById('visitMsg').innerHTML = '&#128279; Mengalihkan ke <b>' + esc(item.orig) + '</b> &hellip; (simulasi)';
+      document.getElementById('visitMsg').classList.add('show');
+    }
+
+    function renderRecent() {
+      var box = document.getElementById('recentBox');
+      if (!recentLinks.length) return;
+      box.classList.add('show');
+      box.innerHTML = recentLinks.map(function (r) {
+        var orig = r.orig.replace(/^https?:\/\//i, '');
+        var show = orig.length > 40 ? orig.slice(0, 40) + '&hellip;' : orig;
+        return '<div class="r-item"><span class="r-url">' + ICONS.link + ' <a href="#" data-short="' + esc(r.short) + '">' + r.short.replace(/^https:\/\//i, '') + '</a></span>' +
+          '<span class="r-orig" title="' + esc(orig) + '">' + show + '</span></div>';
+      }).join('');
     }
 
     function copyShort() {
@@ -900,6 +979,19 @@
     document.getElementById('shortBtn').addEventListener('click', doShorten);
     document.getElementById('shortUrl').addEventListener('keydown', function (e) { if (e.key === 'Enter') doShorten(); });
     document.getElementById('copyBtn').addEventListener('click', copyShort);
+    document.getElementById('shortOut').addEventListener('click', function (e) {
+      e.preventDefault();
+      var s = document.getElementById('shortOut').getAttribute('data-short');
+      if (s) visitShort(s);
+    });
+    document.getElementById('recentBox').addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== this && t.tagName !== 'A') t = t.parentNode;
+      if (t && t.tagName === 'A' && t.getAttribute('data-short')) {
+        e.preventDefault();
+        visitShort(t.getAttribute('data-short'));
+      }
+    });
 
     /* ============ GALERI (mockup UI) ============ */
     var GALS = {
@@ -1030,7 +1122,12 @@
       document.getElementById('rmDesc').innerHTML = '<span class="role-badge">' + role.label + '</span>' + role.desc;
       document.getElementById('rmGrid').innerHTML = RM_MODULES.map(function (mod) {
         var cells = Object.keys(mod.perms).map(function (k) {
-          var yes = RM_GRANTS[key](mod.perms[k]);
+          var p = mod.perms[k];
+          if (p === '-') {
+            return '<div class="perm-cell"><span class="perm-label">' + PERM_LABEL[k] + '</span>' +
+              '<span class="perm-na">&mdash;</span></div>';
+          }
+          var yes = RM_GRANTS[key](p);
           return '<div class="perm-cell"><span class="perm-label">' + PERM_LABEL[k] + '</span>' +
             '<span class="perm-val ' + (yes ? 'perm-yes' : 'perm-no') + '"><span class="dot"></span>' + (yes ? 'Ya' : 'Tidak') + '</span></div>';
         }).join('');
@@ -1069,28 +1166,33 @@
       },
       {
         title: 'Buat Tautan',
-        req: 'POST /api/links\nAuthorization: Bearer &lt;token&gt;\nContent-Type: application/json\n\n{\n  "original_url": "https://contoh.com/artikel-panjang/2026",\n  "custom_alias": "promo",\n  "category_id": 3\n}',
+        req: 'POST /api/links\nAuthorization: Bearer <token>\nContent-Type: application/json\n\n{\n  "original_url": "https://contoh.com/artikel-panjang/2026",\n  "custom_alias": "promo",\n  "category_id": 3\n}',
         res: '{\n  "success": true,\n  "data": {\n    "id": 12,\n    "short_url": "rk.id/promo",\n    "original_url": "https://contoh.com/...",\n    "clicks": 0\n  }\n}'
       },
       {
         title: 'Daftar &amp; Detail',
-        req: 'GET /api/links\nAuthorization: Bearer &lt;token&gt;\n?page=1&amp;per_page=15\n\nGET /api/links/12\nAuthorization: Bearer &lt;token&gt;',
+        req: 'GET /api/links\nAuthorization: Bearer <token>\n?page=1&per_page=15\n\nGET /api/links/12\nAuthorization: Bearer <token>',
         res: '{\n  "success": true,\n  "data": {\n    "id": 12,\n    "short_url": "rk.id/promo",\n    "clicks": 5231,\n    "analytics": {\n      "today": 214, "referrer": { "instagram": 62 }\n    }\n  }\n}'
       },
       {
         title: 'Hapus Tautan',
-        req: 'DELETE /api/links/12\nAuthorization: Bearer &lt;token&gt;',
+        req: 'DELETE /api/links/12\nAuthorization: Bearer <token>',
         res: '{\n  "success": true,\n  "message": "Tautan berhasil dihapus"\n}'
       }
     ];
     function esc(t) {
-      return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     function colorize(code) {
       var out = esc(code);
-      out = out.replace(/(&quot;|\x27)(.*?)(&quot;|\x27)/g, '<span class="tok-s">$&</span>');
-      out = out.replace(/\b(success|data|token|user|id|name|role|email|password|original_url|custom_alias|category_id|short_url|clicks|analytics|message|today|referrer)\b/g, '<span class="tok-k">$1</span>');
-      return out;
+      var ph = [];
+      function stash(html) { ph.push(html); return '\u0001' + (ph.length - 1) + '\u0001'; }
+      out = out.replace(/"([A-Za-z_][A-Za-z0-9_]*)":/g, function (m, k) {
+        return stash('<span class="tok-k">"' + k + '"</span>:');
+      });
+      out = out.replace(/"(?:[^"\\]|\\.)*"/g, function (m) { return stash('<span class="tok-s">' + m + '</span>'); });
+      out = out.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="tok-n">$1</span>');
+      return out.replace(/\u0001(\d+)\u0001/g, function (_, i) { return ph[+i]; });
     }
     function renderApi() {
       document.getElementById('apiExamples').innerHTML = API_EXAMPLES.map(function (ex) {
@@ -1117,6 +1219,27 @@
         });
       });
     }
+
+    /* ============ SCROLLSPY & BACK TO TOP ============ */
+    var navAnchors = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+    var spySections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+    var demoAnchor = document.getElementById('demo');
+    if (demoAnchor) spySections.unshift(demoAnchor);
+    var topBtn = document.getElementById('topBtn');
+
+    function onScroll() {
+      var y = window.scrollY + 140;
+      var id = '';
+      for (var i = 0; i < spySections.length; i++) {
+        if (spySections[i].offsetTop <= y) id = spySections[i].getAttribute('id');
+      }
+      navAnchors.forEach(function (a) {
+        a.classList.toggle('active-link', a.getAttribute('href') === '#' + id);
+      });
+      if (topBtn) topBtn.classList.toggle('show', window.scrollY > 700);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    if (topBtn) topBtn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
     /* ============ FADE-UP ============ */
     function initFade() {
