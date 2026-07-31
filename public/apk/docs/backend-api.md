@@ -571,100 +571,18 @@ Schema::create('fuzzy_hasil', function (Blueprint $table) {
 
 ### 4.5 Alur Logika Program (Flowchart)
 
-```
-┌─────────────────────┐
-│  User Input Data     │
-│  Prestasi Mahasiswa  │
-│  (Form: NIM, Tingkat,│
-│   Juara, Lomba, dll) │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  Simpan ke Tabel     │
-│  prestasi            │
-│  Status: menunggu    │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐     ┌──────────────┐
-│  Admin Verifikasi    │────▶│  Status:      │
-│  (diterima/ditolak)  │     │  diterima     │
-└─────────┬───────────┘     └──────┬───────┘
-          │ (hanya diterima)        │
-          ▼                         │
-┌─────────────────────┐             │
-│  Hitung Jumlah       │◀────────────┘
-│  Prestasi per NIM    │
-│  (count diterima)    │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│  FUZZIFICATION (FuzzyPrestasiService)│
-│                                      │
-│  1. Parse input:                      │
-│     - Tingkat → angka (1-5)          │
-│     - Juara → angka (parse teks)     │
-│     - Jml Prestasi → count           │
-│                                      │
-│  2. Hitung derajat keanggotaan:      │
-│     - fuzzifikasiTingkat(x)         │
-│     - fuzzifikasiJuara(x)           │
-│     - fuzzifikasiJumlahPrestasi(x)   │
-└─────────┬───────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│  RULE EVALUATION                     │
-│                                      │
-│  Untuk setiap aturan (27 rules):     │
-│    degree = MIN(mf_tingkat,          │
-│                 mf_juara,            │
-│                 mf_jumlah)           │
-│    Jika degree > 0 → aturan aktif   │
-│                                      │
-│  Agregasi: MAX per output kualitas   │
-└─────────┬───────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│  DEFUZZIFICATION                     │
-│                                      │
-│  Skor = Σ(centroid × degree)         │
-│         ─────────────────            │
-│            Σ(degree)                 │
-│                                      │
-│  Centroid: Kurang=15, Cukup=35,     │
-│            Baik=55, Sangat Baik=85   │
-│                                      │
-│  Threshold:                          │
-│    ≥ 65 → Sangat Baik               │
-│    ≥ 40 → Baik                      │
-│    ≥ 20 → Cukup                     │
-│    < 20 → Kurang                     │
-└─────────┬───────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│  SIMPAN HASIL                        │
-│                                      │
-│  1. Simpan ke fuzzy_hasil            │
-│     (semua MF + skor + kualitas)     │
-│                                      │
-│  2. Update kolom prestasi:           │
-│     - skor_fuzzy                     │
-│     - kualitas_fuzzy                 │
-└─────────┬───────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│  TAMPILKAN HASIL                     │
-│  - Dashboard fuzzy-kualitas          │
-│  - Chart.js visualizations           │
-│  - Tabel detail per prestasi         │
-│  - Modal detail fuzzifikasi          │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["User Input Data Prestasi Mahasiswa<br/>(NIM, Tingkat, Juara, Lomba)"] --> B["Simpan ke Tabel prestasi<br/>Status: menunggu"]
+    B --> C{"Admin Verifikasi<br/>(diterima/ditolak)"}
+    C -->|"diterima"| D["Status: diterima"]
+    C -->|"ditolak"| X["Status: ditolak"]
+    D --> E["Hitung Jumlah Prestasi per NIM<br/>(count status diterima)"]
+    E --> F["FUZZIFICATION<br/>1. Parse input: Tingkat, Juara, Jml Prestasi<br/>2. Fuzzifikasi: fuzzifikasiTingkat(x), fuzzifikasiJuara(x), fuzzifikasiJumlahPrestasi(x)"]
+    F --> G["RULE EVALUATION (27 rules)<br/>degree = MIN(mf_tingkat, mf_juara, mf_jumlah)<br/>Jika degree > 0, aturan aktif<br/>Agregasi: MAX per output kualitas"]
+    G --> H["DEFUZZIFICATION<br/>Skor = Σ(centroid × degree) / Σ(degree)<br/>Centroid: Kurang=15, Cukup=35, Baik=55, Sangat Baik=85<br/>Threshold: >= 65 Sangat Baik, >= 40 Baik, >= 20 Cukup, < 20 Kurang"]
+    H --> I["SIMPAN HASIL<br/>1. Simpan ke fuzzy_hasil (semua MF + skor + kualitas)<br/>2. Update kolom prestasi: skor_fuzzy, kualitas_fuzzy"]
+    I --> J["TAMPILKAN HASIL<br/>Dashboard fuzzy-kualitas, Chart.js, tabel detail, modal fuzzifikasi"]
 ```
 
 ### 4.6 Implementasi Kode

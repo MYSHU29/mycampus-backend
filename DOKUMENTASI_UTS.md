@@ -273,44 +273,18 @@ $$\text{Skor} = \frac{(60 \times 0.5) + (40 \times 0.5)}{0.5 + 0.5} = \frac{30 +
 
 ### 4.6 Ringkasan Alur Perhitungan
 
-```
-Input: Tingkat=3 (Provinsi), Juara=2, JmlPrestasi=5
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-   Fuzzifikasi  Fuzzifikasi  Fuzzifikasi
-   Tingkat:     Juara:       JmlPrestasi:
-   Sedang=1.0   Juara2=1.0   Sedang=0.5, Banyak=0.5
-        │           │           │
-        └───────────┼───────────┘
-                    ▼
-          ┌─────────────────┐
-          │  Rule Evaluation │
-          │  (MIN per rule)  │
-          ├─────────────────┤
-          │ R13: 0.5 → Baik │
-          │ R14: 0.5 → Cukup│
-          └────────┬────────┘
-                   ▼
-          ┌─────────────────┐
-          │  Aggregation     │
-          │  (MAX per output)│
-          ├─────────────────┤
-          │ Baik: 0.5        │
-          │ Cukup: 0.5       │
-          └────────┬────────┘
-                   ▼
-          ┌─────────────────┐
-          │  Defuzzifikasi   │
-          │  Weighted Average│
-          ├─────────────────┤
-          │ (60×0.5+40×0.5) │
-          │   / (0.5+0.5)   │
-          │   = 50.0         │
-          └────────┬────────┘
-                   ▼
-          Output: Skor=50.0
-                  Kualitas=Baik
+```mermaid
+flowchart TD
+    A["Input: Tingkat=3 (Provinsi), Juara=2, JmlPrestasi=5"] --> B1["Fuzzifikasi Tingkat<br/>Sedang = 1.0"]
+    A --> B2["Fuzzifikasi Juara<br/>Juara 2 = 1.0"]
+    A --> B3["Fuzzifikasi JmlPrestasi<br/>Sedang = 0.5, Banyak = 0.5"]
+    B1 --> C["Rule Evaluation<br/>(MIN per rule)"]
+    B2 --> C
+    B3 --> C
+    C --> D["R13: 0.5 → Baik<br/>R14: 0.5 → Cukup"]
+    D --> E["Aggregation<br/>(MAX per output)<br/>Baik = 0.5, Cukup = 0.5"]
+    E --> F["Defuzzifikasi<br/>Weighted Average = (60×0.5 + 40×0.5) / (0.5 + 0.5) = 50.0"]
+    F --> G["Output: Skor = 50.0<br/>Kualitas = Baik"]
 ```
 
 ---
@@ -414,64 +388,16 @@ resources/views/prestasi-mahasiswa/
 
 ### 6.2 Flowchart Alur Program
 
-```
-┌─────────────────────────────┐
-│   User mengakses halaman    │
-│   Kualitas Fuzzy            │
-└─────────────┬───────────────┘
-              ▼
-┌─────────────────────────────┐
-│   FuzzyPrestasiController   │
-│   -> index()                │
-└─────────────┬───────────────┘
-              ▼
-┌─────────────────────────────┐
-│   Load semua prestasi       │
-│   dengan status diterima    │
-│   (eager load relasi)       │
-└─────────────┬───────────────┘
-              ▼
-┌─────────────────────────────┐
-│   Cek apakah ada prestasi   │
-│   yang belum memiliki       │
-│   skor_fuzzy (null)         │
-└──────────┬──────────────────┘
-     Ya    │    Tidak
-     ▼     │    ▼
-┌──────────┴───────┐  ┌──────────────────┐
-│ Hitung fuzzy     │  │  Langsung tampil  │
-│ untuk semua data │  │  hasil fuzzy     │
-│ (evaluasiSemua)  │  └──────────────────┘
-└──────────┬───────┘
-           ▼
-┌─────────────────────────────┐
-│   Untuk SETIAP prestasi:    │
-│                             │
-│  1. Ambil: tingkat, juara,  │
-│     jumlah_prestasi         │
-│                             │
-│  2. Fuzzifikasi:            │
-│     - tingkat → MF tingkat  │
-│     - juara → MF juara      │
-│     - jml → MF jumlah       │
-│                             │
-│  3. Evaluasi 27 aturan:     │
-│     - MIN per antecedent    │
-│     - MAX per output        │
-│                             │
-│  4. Defuzzifikasi:          │
-│     Weighted Average        │
-│                             │
-│  5. Simpan ke:              │
-│     - fuzzy_hasil           │
-│     - prestasi.skor_fuzzy   │
-└──────────┬──────────────────┘
-           ▼
-┌─────────────────────────────┐
-│   Tampilkan hasil di view   │
-│   (tabel + modal detail +   │
-│    grafik distribusi)       │
-└─────────────────────────────┘
+```mermaid
+flowchart TD
+    A["User mengakses halaman Kualitas Fuzzy"] --> B["FuzzyPrestasiController<br/>-> index()"]
+    B --> C["Load semua prestasi dengan status diterima<br/>(eager load relasi)"]
+    C --> D{"Ada prestasi yang belum memiliki skor_fuzzy (NULL)?"}
+    D -->|"Ya"| E["Hitung fuzzy untuk semua data<br/>(evaluasiSemua)"]
+    D -->|"Tidak"| F["Langsung tampil hasil fuzzy"]
+    E --> G["Untuk SETIAP prestasi:<br/>1. Ambil tingkat, juara, jumlah_prestasi<br/>2. Fuzzifikasi: tingkat → MF tingkat, juara → MF juara, jml → MF jumlah<br/>3. Evaluasi 27 aturan: MIN per antecedent, MAX per output<br/>4. Defuzzifikasi Weighted Average<br/>5. Simpan ke fuzzy_hasil + prestasi.skor_fuzzy"]
+    F --> H["Tampilkan hasil di view<br/>(tabel + modal detail + grafik distribusi)"]
+    G --> H
 ```
 
 ### 6.3 Kode Program Utama

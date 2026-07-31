@@ -543,28 +543,13 @@ database/migrations/
 
 ### Flow Otomatis
 
-```
-User buka halaman fuzzy
-        │
-        ▼
-┌─ Ada skor_fuzzy yang NULL? ─┐
-│                              │
-│  YA                          │  TIDAK
-│  ▼                           ▼
-│  Jalankan evaluasiSemua()    Tampilkan data dari DB
-│  Untuk setiap prestasi:      termasuk fuzzy_hasil
-│  1. Hitung jumlah prestasi  │
-│     per mahasiswa (COUNT)   │
-│  2. Fuzzifikasi 3 variabel  │
-│  3. Evaluasi 27 aturan      │
-│  4. Defuzzifikasi WA        │
-│  5. Simpan ke DB            │
-│     (prestasi_mahasiswa +   │
-│      fuzzy_hasil)           │
-│  ▼                           │
-│  Tampilkan hasil             │
-│                              │
-└──────────────────────────────┘
+```mermaid
+flowchart TD
+    A["User buka halaman fuzzy"] --> B{"Ada skor_fuzzy yang NULL?"}
+    B -->|"YA"| C["Jalankan evaluasiSemua()<br/>Untuk setiap prestasi:<br/>1. Hitung jumlah prestasi per mahasiswa (COUNT)<br/>2. Fuzzifikasi 3 variabel<br/>3. Evaluasi 27 aturan<br/>4. Defuzzifikasi WA<br/>5. Simpan ke DB (prestasi_mahasiswa + fuzzy_hasil)"]
+    B -->|"TIDAK"| D["Tampilkan data dari DB<br/>termasuk fuzzy_hasil"]
+    C --> E["Tampilkan hasil"]
+    D --> E
 ```
 
 ---
