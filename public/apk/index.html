@@ -3,304 +3,512 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MyCampus Mobile - Download Aplikasi</title>
+  <title>MyCampus Mobile — Download Aplikasi</title>
+  <meta name="description" content="MyCampus Mobile — Sistem Informasi Akademik. Unduh aplikasi Android untuk akses data mahasiswa, prestasi, pembayaran SPP, dan lainnya. Flutter + Laravel 13.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #00F0FF;
+      --primary-light: #22D3EE;
+      --accent: #A855F7;
+      --success: #34D399;
+      --danger: #F87171;
+      --warning: #F59E0B;
+      --text: #E6EDF3;
+      --muted: #8B949E;
+      --muted-2: #484F58;
+      --border: #30363D;
+      --card: #161B22;
+      --panel: #0D1117;
+      --page: #050512;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #050512;
-      color: #E6EDF3;
+      background: var(--page);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-image: radial-gradient(ellipse at 50% 0%, rgba(0, 240, 255, 0.04) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 50%);
+      background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(0, 240, 255, 0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 40%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 75%, rgba(0, 240, 255, 0.03) 0%, transparent 45%);
+      background-attachment: fixed;
     }
-    .container {
-      max-width: 480px;
-      width: 100%;
-      padding: 40px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .logo-wrapper {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00F0FF, #A855F7);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 24px;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.15), 0 0 80px rgba(168, 85, 247, 0.1);
-    }
-    .logo-inner {
-      width: 82px; height: 82px;
-      border-radius: 50%;
-      background: #0D1117;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo-inner svg { width: 44px; height: 44px; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
 
-    h1 {
-      font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #E6EDF3, #00F0FF);
+    /* Nav */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(13, 17, 23, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(48, 54, 61, 0.6);
+    }
+    .nav-inner {
+      max-width: 1126px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text); text-decoration: none;
+      font-family: 'JetBrains Mono', monospace; font-weight: 700;
+      font-size: 15px; letter-spacing: 0.04em;
+    }
+    .nav-brand svg { display: block; }
+    .nav-brand .cyan { color: var(--primary); }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      padding: 8px 12px; border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); background: rgba(0, 240, 255, 0.06); }
+
+    main { position: relative; }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+      position: relative;
+    }
+    .hero-logo {
+      width: 108px; height: 108px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 60px rgba(0, 240, 255, 0.22), 0 0 120px rgba(168, 85, 247, 0.12);
+      animation: float 5s ease-in-out infinite;
+    }
+    .hero-logo svg { width: 56px; height: 56px; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .hero h1 {
+      margin-top: 32px;
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 1.02;
+      background: linear-gradient(120deg, #FFFFFF 0%, var(--primary) 55%, var(--accent) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 6px;
     }
-    .subtitle {
-      font-size: 14px; font-weight: 500; color: #8B949E;
-      margin-bottom: 8px; letter-spacing: 0.02em;
+    .hero h1 .thin { font-weight: 400; }
+    .hero-sub {
+      margin-top: 18px; max-width: 620px;
+      font-size: 16px; line-height: 1.75; color: var(--muted);
     }
-    .version-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #161B22; border: 1px solid #30363D;
-      border-radius: 20px; padding: 6px 14px;
-      font-size: 12px; font-weight: 600; color: #8B949E;
-      margin-bottom: 24px;
+    .hero-sub strong { color: var(--primary); font-weight: 600; }
+    .hero-cta { margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 15px 28px; border-radius: 999px;
+      text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
     }
-    .version-badge span { color: #00F0FF; }
-    .version-badge .arch { color: #A855F7; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--primary); color: #0A0A1A;
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.28);
+    }
+    .btn-primary:hover { box-shadow: 0 0 40px rgba(0, 240, 255, 0.4); }
+    .btn-outline { border: 1px solid rgba(0, 240, 255, 0.5); color: var(--primary); background: transparent; }
+    .btn-outline:hover { border-color: var(--primary); background: rgba(0, 240, 255, 0.06); }
+    .btn-dark { background: #1A1F2A; color: var(--text); border: 1px solid var(--border); }
+    .btn-dark:hover { border-color: rgba(0, 240, 255, 0.4); }
 
+    .hero-badges { margin-top: 48px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 16px; background: rgba(13, 17, 23, 0.7);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .badge:hover { border-color: rgba(0, 240, 255, 0.5); color: var(--primary); }
+
+    /* Sections */
+    .section { max-width: 1126px; margin: 0 auto; padding: 96px 24px 32px; }
+    .section-head { margin-bottom: 44px; }
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700; color: var(--primary);
+      text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px;
+    }
     .section-title {
-      font-size: 18px; font-weight: 700; color: #E6EDF3;
-      width: 100%; text-align: left; margin-bottom: 12px;
+      font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .section-desc { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 640px; }
+
+    /* Feature cards */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+    .f-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 26px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .f-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 240, 255, 0.45);
+      box-shadow: 0 8px 40px rgba(0, 240, 255, 0.08);
+    }
+    .f-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .f-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .f-card p { font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+    /* Download cards */
+    .dl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .dl-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      display: flex; flex-direction: column;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .dl-card.featured { border-color: rgba(0, 240, 255, 0.5); box-shadow: 0 0 40px rgba(0, 240, 255, 0.07); }
+    .dl-card.featured::before {
+      content: 'PALING BANYAK DIGUNAKAN';
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+      letter-spacing: 0.16em; color: var(--primary);
+      display: block; margin-bottom: 14px;
+    }
+    .dl-arch { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; }
+    .dl-size { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .dl-desc { font-size: 12px; line-height: 1.6; color: var(--muted); margin: 14px 0 20px; flex: 1; }
+    .dl-actions { display: flex; flex-direction: column; gap: 8px; }
+    .dl-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+      text-decoration: none; border-radius: 10px; padding: 13px 16px;
+      transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .dl-btn:hover { transform: translateY(-1px); }
+    .dl-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #0A0A1A; }
+    .dl-primary:hover { box-shadow: 0 0 26px rgba(0, 240, 255, 0.32); }
+    .dl-ghost { background: var(--panel); color: var(--muted); border: 1px solid var(--border); }
+    .dl-ghost:hover { border-color: rgba(0, 240, 255, 0.5); color: var(--text); }
+    .dl-note { font-size: 11px; color: var(--muted-2); text-align: center; margin-top: 6px; }
+    .dl-note .ok { color: var(--primary); }
+
+    .dl-tip {
+      margin-top: 22px; padding: 16px 20px;
+      background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px; font-size: 13px; line-height: 1.7; color: var(--muted);
+    }
+    .dl-tip strong { color: var(--primary); }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 26px 18px; text-align: center;
+    }
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 30px; font-weight: 700; color: var(--primary);
+    }
+    .stat-label {
+      margin-top: 6px; font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.14em;
     }
 
+    /* About */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .about-text {
-      font-size: 14px; line-height: 1.7; color: #8B949E;
-      width: 100%; margin-bottom: 24px; text-align: left;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; font-size: 14px; line-height: 1.8; color: var(--muted);
     }
+    .about-text strong { color: var(--text); }
+    .about-text em { color: var(--primary); font-style: normal; font-weight: 600; }
+    .about-text + .about-text { }
 
-    .features {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-      width: 100%; margin-bottom: 28px;
+    /* Footer */
+    .footer {
+      margin-top: 80px; padding: 56px 24px 40px;
+      border-top: 1px solid var(--border);
+      background: rgba(13, 17, 23, 0.5);
+      text-align: center;
     }
-    .feature-card {
-      background: #161B22; border: 1px solid #30363D;
-      border-radius: 12px; padding: 16px; text-align: center;
-      transition: border-color 0.2s;
+    .footer-brand { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; }
+    .footer-brand .cyan { color: var(--primary); }
+    .footer-stack { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted-2); }
+    .footer-links { margin-top: 26px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .footer-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+      padding: 10px 20px; text-decoration: none; transition: border-color 0.2s, color 0.2s;
     }
-    .feature-card:hover { border-color: #00F0FF40; }
-    .feature-icon { font-size: 24px; margin-bottom: 8px; }
-    .feature-name { font-size: 12px; font-weight: 600; color: #E6EDF3; }
-    .feature-desc { font-size: 10px; color: #8B949E; margin-top: 2px; }
+    .footer-btn:hover { border-color: rgba(0, 240, 255, 0.5); color: var(--primary); }
+    .footer-btn.accent { border-color: rgba(168, 85, 247, 0.5); color: var(--accent); }
+    .footer-btn.accent:hover { border-color: var(--accent); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: var(--muted-2); }
 
-    .divider { width: 100%; height: 1px; background: #30363D; margin: 8px 0 24px; }
+    .fade-up { animation: fadeUp 0.8s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .delay-1 { animation-delay: 0.12s; }
+    .delay-2 { animation-delay: 0.24s; }
+    .delay-3 { animation-delay: 0.36s; }
 
-    .download-section {
-      width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;
-    }
-    .btn-mirror {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 16px 24px;
-      background: linear-gradient(135deg, #00F0FF, #22D3EE);
-      color: #0A0A1A; font-family: 'Inter', sans-serif;
-      font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
-      border: none; border-radius: 12px; cursor: pointer;
-      text-decoration: none; transition: box-shadow 0.3s, transform 0.2s;
-    }
-    .btn-mirror:hover {
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
-      transform: translateY(-2px);
-    }
-    .btn-mirror .badge {
-      font-size: 10px; font-weight: 600; padding: 2px 8px;
-      background: rgba(0,0,0,0.2); border-radius: 6px;
-    }
-    .btn-server {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 12px 24px;
-      background: #161B22; color: #8B949E;
-      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
-      border: 1px solid #30363D; border-radius: 12px; cursor: pointer;
-      text-decoration: none; transition: all 0.2s;
-    }
-    .btn-server:hover { border-color: #00F0FF60; color: #E6EDF3; }
-    .speed-label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 11px; color: #484F58;
-    }
-    .speed-label .fast { color: #00F0FF; }
-
-    .info-row {
-      display: flex; align-items: center; gap: 24px;
-      padding: 16px 0; width: 100%; justify-content: center;
-    }
-    .info-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .info-value { font-size: 13px; font-weight: 700; color: #E6EDF3; }
-    .info-label { font-size: 10px; font-weight: 500; color: #8B949E; text-transform: uppercase; letter-spacing: 0.05em; }
-
-    .btn-webapp {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 14px 24px;
-      background: #161B22; color: #E6EDF3;
-      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
-      border: 1px solid #30363D; border-radius: 12px; cursor: pointer;
-      text-decoration: none; margin-bottom: 32px; transition: border-color 0.2s;
-    }
-    .btn-webapp:hover { border-color: #00F0FF60; }
-
-    .footer { font-size: 11px; color: #484F58; text-align: center; padding: 24px 0 16px; width: 100%; }
-    .footer a { color: #00F0FF80; text-decoration: none; }
-    .footer a:hover { color: #00F0FF; }
-
-    @media (max-width: 400px) {
-      .features { grid-template-columns: 1fr; }
-      .container { padding: 24px 16px; }
+    @media (max-width: 768px) {
+      .nav-links a { font-size: 10px; padding: 8px 8px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .section { padding-top: 72px; }
+      .hero { padding-top: 140px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo-wrapper">
-      <div class="logo-inner">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+          <polygon points="32,8 56,22 32,30 8,22" fill="#00f0ff" opacity="0.9"/>
+          <polygon points="18,24 32,32 46,24 46,28 32,36 18,28" fill="#a855f7" opacity="0.7"/>
+          <rect x="20" y="36" width="24" height="16" rx="2" fill="none" stroke="#00f0ff" stroke-width="2" opacity="0.6"/>
+        </svg>
+        My<span class="cyan">Campus</span>
+      </a>
+      <div class="nav-links">
+        <a href="#fitur">Fitur</a>
+        <a href="#download">Download</a>
+        <a href="#tentang">Tentang</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-logo fade-up">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
           <defs>
-            <linearGradient id="neonGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <linearGradient id="heroGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#00f0ff"/>
               <stop offset="100%" stop-color="#a855f7"/>
             </linearGradient>
           </defs>
-          <polygon points="32,8 56,22 32,30 8,22" fill="url(#neonGrad)" opacity="0.9"/>
+          <polygon points="32,8 56,22 32,30 8,22" fill="url(#heroGrad)" opacity="0.9"/>
           <line x1="48" y1="16" x2="54" y2="28" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
           <circle cx="54" cy="29" r="2" fill="#00f0ff" opacity="0.8"/>
-          <polygon points="18,24 32,32 46,24 46,28 32,36 18,28" fill="url(#neonGrad)" opacity="0.7"/>
-          <rect x="20" y="36" width="24" height="16" rx="2" fill="none" stroke="url(#neonGrad)" stroke-width="1.5" opacity="0.6"/>
-          <line x1="32" y1="36" x2="32" y2="52" stroke="url(#neonGrad)" stroke-width="1" opacity="0.4"/>
-          <line x1="8" y1="22" x2="4" y2="22" stroke="#00f0ff" stroke-width="0.8" opacity="0.4"/>
-          <line x1="4" y1="22" x2="4" y2="30" stroke="#00f0ff" stroke-width="0.8" opacity="0.4"/>
-          <circle cx="4" cy="30" r="1" fill="#00f0ff" opacity="0.5"/>
-          <line x1="56" y1="22" x2="60" y2="22" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/>
-          <line x1="60" y1="22" x2="60" y2="14" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/>
-          <circle cx="60" cy="14" r="1" fill="#a855f7" opacity="0.5"/>
+          <polygon points="18,24 32,32 46,24 46,28 32,36 18,28" fill="url(#heroGrad)" opacity="0.7"/>
+          <rect x="20" y="36" width="24" height="16" rx="2" fill="none" stroke="url(#heroGrad)" stroke-width="1.5" opacity="0.6"/>
+          <line x1="32" y1="36" x2="32" y2="52" stroke="url(#heroGrad)" stroke-width="1" opacity="0.4"/>
           <circle cx="8" cy="22" r="1.5" fill="#00f0ff" opacity="0.6"/>
           <circle cx="56" cy="22" r="1.5" fill="#a855f7" opacity="0.6"/>
         </svg>
       </div>
-    </div>
 
-    <h1>MyCampus Mobile</h1>
-    <p class="subtitle">Sistem Informasi Akademik</p>
+      <h1 class="fade-up delay-1">My<span class="thin">Campus</span></h1>
+      <p class="hero-sub fade-up delay-2">
+        Manajemen data akademik berbasis <strong>Laravel 13</strong> REST API dengan aplikasi mobile <strong>Flutter</strong>.
+        Dilengkapi <strong>Fuzzy Logic</strong> evaluasi prestasi, RBAC real-time, dan approval queue.
+      </p>
 
-    <div class="version-badge">
-      v1.0.0 <span>·</span> Android 8.0+ <span>·</span> <span class="arch">arm64-v8a</span>
-    </div>
-
-    <h2 class="section-title">Tentang Aplikasi</h2>
-    <p class="about-text">
-      MyCampus Mobile adalah aplikasi akademik digital yang dirancang untuk mempermudah mahasiswa 
-      dalam mengakses informasi perkuliahan secara <em>real-time</em>. Mulai dari data mahasiswa, 
-      prestasi akademik dan non-akademik, pembayaran SPP, pengambilan mata kuliah, hingga peminjaman 
-      buku &mdash; semuanya tersaji dalam satu genggaman.
-    </p>
-    <p class="about-text">
-      Aplikasi ini dibangun dengan <strong>Flutter</strong> untuk antarmuka yang responsif dan 
-      <strong>Laravel</strong> di sisi backend. Didukung oleh sistem evaluasi <strong>Fuzzy Logic 
-      Mamdani</strong> untuk analisis performa mahasiswa secara otomatis.
-    </p>
-
-    <h2 class="section-title">Fitur Utama</h2>
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4CA;</div>
-        <div class="feature-name">Dashboard</div>
-        <div class="feature-desc">IPO, SKS, grafik nilai</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F3C6;</div>
-        <div class="feature-name">Prestasi</div>
-        <div class="feature-desc">Filter, search, statistik</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F464;</div>
-        <div class="feature-name">Data Mahasiswa</div>
-        <div class="feature-desc">NIM, IPK, status, filter</div>
+      <div class="hero-cta fade-up delay-3">
+        <a class="btn btn-primary" href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-arm64-v8a.apk">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download APK
+        </a>
+        <a class="btn btn-outline" href="/">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          Buka Web App
+        </a>
+        <a class="btn btn-dark" href="#fitur">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+          Fitur
+        </a>
       </div>
 
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F9E0;</div>
-        <div class="feature-name">Fuzzy Logic</div>
-        <div class="feature-desc">Mamdani evaluasi</div>
+      <div class="hero-badges">
+        <span class="badge">Flutter 3</span>
+        <span class="badge">Laravel 13</span>
+        <span class="badge">PHP 8.3</span>
+        <span class="badge">Sanctum</span>
+        <span class="badge">Fuzzy Logic</span>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F319;</div>
-        <div class="feature-name">Dark Mode</div>
-        <div class="feature-desc">Material 3</div>
+    </section>
+
+    <!-- FITUR -->
+    <section class="section" id="fitur">
+      <div class="section-head">
+        <div class="section-eyebrow">Fitur Utama</div>
+        <h2 class="section-title">Semua kebutuhan akademik, satu aplikasi</h2>
+        <p class="section-desc">Dari data mahasiswa, prestasi, hingga evaluasi kualitas otomatis &mdash; tersaji dalam satu genggaman.</p>
       </div>
-    </div>
+      <div class="features">
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(0,240,255,0.1);color:var(--primary)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="7"/><rect x="12" y="6" width="3" height="11"/><rect x="17" y="13" width="3" height="4"/></svg>
+          </div>
+          <h3>Dashboard</h3>
+          <p>Ringkasan data mahasiswa, grafik prestasi per jenis &amp; tingkat, tren bulanan, dan capaian verifikasi.</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(168,85,247,0.12);color:var(--accent)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+          <h3>Prestasi Mahasiswa</h3>
+          <p>Pendaftaran prestasi, upload sertifikat, status verifikasi, dan skor kualitas fuzzy otomatis.</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(0,240,255,0.1);color:var(--primary)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Data Mahasiswa</h3>
+          <p>NIM, IPK, semester, status akademik, foto profil, dan pencarian data mahasiswa secara lengkap.</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(168,85,247,0.12);color:var(--accent)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3>Fuzzy Logic</h3>
+          <p>Evaluasi kualitas prestasi berbasis tingkat, juara, dan jumlah prestasi &mdash; dengan skor 0&ndash;100.</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(0,240,255,0.1);color:var(--primary)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h3>Pembayaran SPP</h3>
+          <p>Pencatatan pembayaran SPP, status lunas/cicil/bebas, dan riwayat transaksi per semester.</p>
+        </div>
+        <div class="f-card">
+          <div class="f-icon" style="background:rgba(168,85,247,0.12);color:var(--accent)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <h3>Mode Gelap</h3>
+          <p>Antarmuka Material 3 dengan tema gelap neon yang nyaman di mata, dirancang dengan Flutter.</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="divider"></div>
+    <!-- DOWNLOAD -->
+    <section class="section" id="download">
+      <div class="section-head">
+        <div class="section-eyebrow">Download</div>
+        <h2 class="section-title">Unduh Aplikasi</h2>
+        <p class="section-desc">Pilih versi sesuai arsitektur prosesor HP Anda. Paling aman gunakan <strong>arm64-v8a</strong> untuk HP Android modern (2020+).</p>
+      </div>
 
-    <h2 class="section-title">Download Aplikasi</h2>
-    <div class="download-section">
-      <a href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-arm64-v8a.apk" class="btn-mirror">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download (Mirror - Cepat)
-        <span class="badge">CDN</span>
+      <div class="dl-cards">
+        <div class="dl-card featured">
+          <div class="dl-arch">arm64-v8a</div>
+          <div class="dl-size">18.0 MB</div>
+          <p class="dl-desc">Cocok untuk Samsung A56, Pixel, Xiaomi, dan sebagian besar HP Android 2020+. Hampir semua HP modern memakai arsitektur ini.</p>
+          <div class="dl-actions">
+            <a class="dl-btn dl-primary" href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-arm64-v8a.apk">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download (Mirror)
+            </a>
+            <a class="dl-btn dl-ghost" href="/api/download-apk/arm64-v8a">Download (Server)</a>
+          </div>
+          <div class="dl-note"><span class="ok">&#9889;</span> Via GitHub CDN &mdash; kencang &amp; stabil</div>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-arch">armeabi-v7a</div>
+          <div class="dl-size">15.8 MB</div>
+          <p class="dl-desc">Untuk HP Android lama (32-bit, Android 5.0+) yang tidak mendukung arm64. Ukurannya paling kecil.</p>
+          <div class="dl-actions">
+            <a class="dl-btn dl-primary" href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-armeabi-v7a.apk">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download (Mirror)
+            </a>
+            <a class="dl-btn dl-ghost" href="/api/download-apk/armeabi-v7a">Download (Server)</a>
+          </div>
+          <div class="dl-note"><span class="ok">&#9889;</span> Via GitHub CDN &mdash; kencang &amp; stabil</div>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-arch">x86_64</div>
+          <div class="dl-size">19.4 MB</div>
+          <p class="dl-desc">Untuk emulator Android (BlueStacks, Android Studio AVD) atau perangkat berbasis prosesor Intel.</p>
+          <div class="dl-actions">
+            <a class="dl-btn dl-primary" href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-x86_64.apk">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download (Mirror)
+            </a>
+            <a class="dl-btn dl-ghost" href="/api/download-apk/x86_64">Download (Server)</a>
+          </div>
+          <div class="dl-note"><span class="ok">&#9889;</span> Via GitHub CDN &mdash; kencang &amp; stabil</div>
+        </div>
+      </div>
+
+      <div class="dl-tip">
+        <strong>Cara mengetahui arsitektur HP Anda:</strong> buka <em>Settings &#8594; About Phone &#8594; Processor</em> atau instal aplikasi CPU-Z. Jika tidak yakin, gunakan <strong>arm64-v8a</strong> &mdash; ini pilihan yang paling umum dan aman.
+      </div>
+    </section>
+
+    <!-- STATISTIK -->
+    <section class="section">
+      <div class="stats">
+        <div class="stat"><div class="stat-value">109+</div><div class="stat-label">API Endpoint</div></div>
+        <div class="stat"><div class="stat-value">4</div><div class="stat-label">Peran</div></div>
+        <div class="stat"><div class="stat-value">2</div><div class="stat-label">Platform</div></div>
+        <div class="stat"><div class="stat-value">1</div><div class="stat-label">Fuzzy Engine</div></div>
+      </div>
+    </section>
+
+    <!-- TENTANG -->
+    <section class="section" id="tentang">
+      <div class="section-head">
+        <div class="section-eyebrow">Tentang</div>
+        <h2 class="section-title">Aplikasi Akademik Digital</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          MyCampus Mobile adalah aplikasi akademik digital yang dirancang untuk mempermudah mahasiswa dalam mengakses
+          informasi perkuliahan secara <em>real-time</em>. Mulai dari data mahasiswa, prestasi akademik dan non-akademik,
+          pembayaran SPP, pengambilan mata kuliah, hingga peminjaman buku &mdash; semuanya tersaji dalam satu genggaman.
+        </div>
+        <div class="about-text">
+          Aplikasi ini dibangun dengan <strong>Flutter</strong> untuk antarmuka yang responsif dan <strong>Laravel 13</strong>
+          di sisi backend. Didukung oleh sistem evaluasi <strong>Fuzzy Logic</strong> untuk analisis performa mahasiswa secara
+          otomatis, serta sistem <strong>RBAC</strong> (Role-Based Access Control) untuk keamanan hak akses per peran.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">My<span class="cyan">Campus</span></div>
+    <div class="footer-stack">Flutter 3 &bull; PHP 8.3 &bull; Laravel 13 &bull; Sanctum</div>
+    <div class="footer-links">
+      <a class="footer-btn" href="https://github.com/MYSHU29/mycampus-backend" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Backend
       </a>
-      <div class="speed-label">
-        <span class="fast">&#x26A1; Via GitHub CDN — kencang, stabil</span>
-      </div>
-
-      <a href="/api/download-apk/arm64-v8a" class="btn-server">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
-          <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
-          <line x1="6" y1="6" x2="6.01" y2="6"/>
-          <line x1="6" y1="18" x2="6.01" y2="18"/>
-        </svg>
-        Download (Server - Alternatif)
+      <a class="footer-btn" href="https://github.com/MYSHU29/mycampus-mobile" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          Mobile
       </a>
-      <div class="speed-label">
-        Via InfinityFree — lambat, cadangan jika mirror error
-      </div>
+      <a class="footer-btn accent" href="https://github.com/MYSHU29" target="_blank" rel="noopener noreferrer">@MYSHU29</a>
     </div>
-
-    <p class="about-text" style="font-size:12px; color:#484F58;">
-      Ukuran file: 18.9 MB &middot; Arsitektur: arm64-v8a (cocok untuk Samsung A56, Pixel, Xiaomi, dan sebagian besar HP Android 2020+)
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="info-row">
-      <div class="info-item">
-        <span class="info-value">109+</span>
-        <span class="info-label">API Endpoint</span>
-      </div>
-      <div class="info-item">
-        <span class="info-value">4</span>
-        <span class="info-label">Peran</span>
-      </div>
-      <div class="info-item">
-        <span class="info-value">2</span>
-        <span class="info-label">Platform</span>
-      </div>
-      <div class="info-item">
-        <span class="info-value">1</span>
-        <span class="info-label">Fuzzy Engine</span>
-      </div>
-    </div>
-
-    <a href="/" class="btn-webapp">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-      </svg>
-      Buka Web App
-    </a>
-
-    <div class="footer">
-      &copy; 2026 MyCampus &middot; Dibangun dengan Laravel + Flutter<br>
-      <a href="/">Buka Web App</a> &middot; <a href="/">Website</a>
-    </div>
-  </div>
+    <div class="footer-copy">&copy; 2026 MyCampus &middot; Dibangun dengan Laravel + Flutter</div>
+  </footer>
 </body>
 </html>
