@@ -1,8 +1,8 @@
 # Dokumentasi UTS — Implementasi Logika Fuzzy Sistem Rekomendasi Prestasi Mahasiswa
 
-**Mata Kuliah:** Pemrograman Web Lanjut  
-**NIM:** 22101001  
-**Nama:** (Isi Nama Anda)  
+**Mata Kuliah:** Pemrograman Web 2  
+**NIM:** 2455201110013  
+**Nama:** Muhammad Syafiq Husin  
 **Aplikasi:** MyCampus (Sistem Informasi Akademik) — Laravel 13 + MySQL
 
 ---
@@ -190,7 +190,7 @@ Metode **Mamdani** dipilih dengan pertimbangan:
 
 | Field | Nilai |
 |-------|-------|
-| NIM | 22101001 (ganjil) |
+| NIM | 2455201110013 (ganjil) |
 | Nama | Ahmad Rizki Pratama |
 | Tingkat Kompetisi | Provinsi → nilai $x_1 = 3$ |
 | Juara | "2" → parsed $x_2 = 2$ |
