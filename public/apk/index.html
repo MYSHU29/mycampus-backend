@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyCampus Mobile - Download Aplikasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #050512;
+      color: #E6EDF3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(0, 240, 255, 0.04) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 50%);
+    }
+    .container {
+      max-width: 480px;
+      width: 100%;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .logo-wrapper {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00F0FF, #A855F7);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.15), 0 0 80px rgba(168, 85, 247, 0.1);
+    }
+    .logo-inner {
+      width: 82px; height: 82px;
+      border-radius: 50%;
+      background: #0D1117;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-inner svg { width: 44px; height: 44px; }
+
+    h1 {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #E6EDF3, #00F0FF);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 14px; font-weight: 500; color: #8B949E;
+      margin-bottom: 8px; letter-spacing: 0.02em;
+    }
+    .version-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #161B22; border: 1px solid #30363D;
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; font-weight: 600; color: #8B949E;
+      margin-bottom: 24px;
+    }
+    .version-badge span { color: #00F0FF; }
+    .version-badge .arch { color: #A855F7; }
+
+    .section-title {
+      font-size: 18px; font-weight: 700; color: #E6EDF3;
+      width: 100%; text-align: left; margin-bottom: 12px;
+    }
+
+    .about-text {
+      font-size: 14px; line-height: 1.7; color: #8B949E;
+      width: 100%; margin-bottom: 24px; text-align: left;
+    }
+
+    .features {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      width: 100%; margin-bottom: 28px;
+    }
+    .feature-card {
+      background: #161B22; border: 1px solid #30363D;
+      border-radius: 12px; padding: 16px; text-align: center;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: #00F0FF40; }
+    .feature-icon { font-size: 24px; margin-bottom: 8px; }
+    .feature-name { font-size: 12px; font-weight: 600; color: #E6EDF3; }
+    .feature-desc { font-size: 10px; color: #8B949E; margin-top: 2px; }
+
+    .divider { width: 100%; height: 1px; background: #30363D; margin: 8px 0 24px; }
+
+    .download-section {
+      width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;
+    }
+    .btn-mirror {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 16px 24px;
+      background: linear-gradient(135deg, #00F0FF, #22D3EE);
+      color: #0A0A1A; font-family: 'Inter', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
+      border: none; border-radius: 12px; cursor: pointer;
+      text-decoration: none; transition: box-shadow 0.3s, transform 0.2s;
+    }
+    .btn-mirror:hover {
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    .btn-mirror .badge {
+      font-size: 10px; font-weight: 600; padding: 2px 8px;
+      background: rgba(0,0,0,0.2); border-radius: 6px;
+    }
+    .btn-server {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px 24px;
+      background: #161B22; color: #8B949E;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      border: 1px solid #30363D; border-radius: 12px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-server:hover { border-color: #00F0FF60; color: #E6EDF3; }
+    .speed-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: #484F58;
+    }
+    .speed-label .fast { color: #00F0FF; }
+
+    .info-row {
+      display: flex; align-items: center; gap: 24px;
+      padding: 16px 0; width: 100%; justify-content: center;
+    }
+    .info-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .info-value { font-size: 13px; font-weight: 700; color: #E6EDF3; }
+    .info-label { font-size: 10px; font-weight: 500; color: #8B949E; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .btn-webapp {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 14px 24px;
+      background: #161B22; color: #E6EDF3;
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+      border: 1px solid #30363D; border-radius: 12px; cursor: pointer;
+      text-decoration: none; margin-bottom: 32px; transition: border-color 0.2s;
+    }
+    .btn-webapp:hover { border-color: #00F0FF60; }
+
+    .footer { font-size: 11px; color: #484F58; text-align: center; padding: 24px 0 16px; width: 100%; }
+    .footer a { color: #00F0FF80; text-decoration: none; }
+    .footer a:hover { color: #00F0FF; }
+
+    @media (max-width: 400px) {
+      .features { grid-template-columns: 1fr; }
+      .container { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrapper">
+      <div class="logo-inner">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+          <defs>
+            <linearGradient id="neonGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00f0ff"/>
+              <stop offset="100%" stop-color="#a855f7"/>
+            </linearGradient>
+          </defs>
+          <polygon points="32,8 56,22 32,30 8,22" fill="url(#neonGrad)" opacity="0.9"/>
+          <line x1="48" y1="16" x2="54" y2="28" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <circle cx="54" cy="29" r="2" fill="#00f0ff" opacity="0.8"/>
+          <polygon points="18,24 32,32 46,24 46,28 32,36 18,28" fill="url(#neonGrad)" opacity="0.7"/>
+          <rect x="20" y="36" width="24" height="16" rx="2" fill="none" stroke="url(#neonGrad)" stroke-width="1.5" opacity="0.6"/>
+          <line x1="32" y1="36" x2="32" y2="52" stroke="url(#neonGrad)" stroke-width="1" opacity="0.4"/>
+          <line x1="8" y1="22" x2="4" y2="22" stroke="#00f0ff" stroke-width="0.8" opacity="0.4"/>
+          <line x1="4" y1="22" x2="4" y2="30" stroke="#00f0ff" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="4" cy="30" r="1" fill="#00f0ff" opacity="0.5"/>
+          <line x1="56" y1="22" x2="60" y2="22" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/>
+          <line x1="60" y1="22" x2="60" y2="14" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="60" cy="14" r="1" fill="#a855f7" opacity="0.5"/>
+          <circle cx="8" cy="22" r="1.5" fill="#00f0ff" opacity="0.6"/>
+          <circle cx="56" cy="22" r="1.5" fill="#a855f7" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1>MyCampus Mobile</h1>
+    <p class="subtitle">Sistem Informasi Akademik</p>
+
+    <div class="version-badge">
+      v1.0.0 <span>·</span> Android 8.0+ <span>·</span> <span class="arch">arm64-v8a</span>
+    </div>
+
+    <h2 class="section-title">Tentang Aplikasi</h2>
+    <p class="about-text">
+      MyCampus Mobile adalah aplikasi akademik digital yang dirancang untuk mempermudah mahasiswa 
+      dalam mengakses informasi perkuliahan secara <em>real-time</em>. Mulai dari data mahasiswa, 
+      prestasi akademik dan non-akademik, pembayaran SPP, pengambilan mata kuliah, hingga peminjaman 
+      buku &mdash; semuanya tersaji dalam satu genggaman.
+    </p>
+    <p class="about-text">
+      Aplikasi ini dibangun dengan <strong>Flutter</strong> untuk antarmuka yang responsif dan 
+      <strong>Laravel</strong> di sisi backend. Didukung oleh sistem evaluasi <strong>Fuzzy Logic 
+      Mamdani</strong> untuk analisis performa mahasiswa secara otomatis.
+    </p>
+
+    <h2 class="section-title">Fitur Utama</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4CA;</div>
+        <div class="feature-name">Dashboard</div>
+        <div class="feature-desc">IPO, SKS, grafik nilai</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F3C6;</div>
+        <div class="feature-name">Prestasi</div>
+        <div class="feature-desc">Filter, search, statistik</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F464;</div>
+        <div class="feature-name">Data Mahasiswa</div>
+        <div class="feature-desc">NIM, IPK, status, filter</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F9E0;</div>
+        <div class="feature-name">Fuzzy Logic</div>
+        <div class="feature-desc">Mamdani evaluasi</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F319;</div>
+        <div class="feature-name">Dark Mode</div>
+        <div class="feature-desc">Material 3</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="section-title">Download Aplikasi</h2>
+    <div class="download-section">
+      <a href="https://github.com/MYSHU29/mycampus-releases/releases/download/v1.0.0/MyCampus-arm64-v8a.apk" class="btn-mirror">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download (Mirror - Cepat)
+        <span class="badge">CDN</span>
+      </a>
+      <div class="speed-label">
+        <span class="fast">&#x26A1; Via GitHub CDN — kencang, stabil</span>
+      </div>
+
+      <a href="/api/download-apk/arm64-v8a" class="btn-server">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+          <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+          <line x1="6" y1="6" x2="6.01" y2="6"/>
+          <line x1="6" y1="18" x2="6.01" y2="18"/>
+        </svg>
+        Download (Server - Alternatif)
+      </a>
+      <div class="speed-label">
+        Via InfinityFree — lambat, cadangan jika mirror error
+      </div>
+    </div>
+
+    <p class="about-text" style="font-size:12px; color:#484F58;">
+      Ukuran file: 18.9 MB &middot; Arsitektur: arm64-v8a (cocok untuk Samsung A56, Pixel, Xiaomi, dan sebagian besar HP Android 2020+)
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="info-row">
+      <div class="info-item">
+        <span class="info-value">109+</span>
+        <span class="info-label">API Endpoint</span>
+      </div>
+      <div class="info-item">
+        <span class="info-value">4</span>
+        <span class="info-label">Peran</span>
+      </div>
+      <div class="info-item">
+        <span class="info-value">2</span>
+        <span class="info-label">Platform</span>
+      </div>
+      <div class="info-item">
+        <span class="info-value">1</span>
+        <span class="info-label">Fuzzy Engine</span>
+      </div>
+    </div>
+
+    <a href="/" class="btn-webapp">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      Buka Web App
+    </a>
+
+    <div class="footer">
+      &copy; 2026 MyCampus &middot; Dibangun dengan Laravel + Flutter<br>
+      <a href="/">Buka Web App</a> &middot; <a href="/">Website</a>
+    </div>
+  </div>
+</body>
+</html>
