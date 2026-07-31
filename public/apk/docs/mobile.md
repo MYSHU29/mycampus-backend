@@ -49,6 +49,38 @@ lib/
 - Mode gelap Material 3 dengan aksen neon
 - Solver **JS Challenge** untuk hosting InfinityFree
 
+## Alur Aplikasi
+
+Alur kerja aplikasi dimulai dari pengecekan token: jika token tersimpan, aplikasi langsung masuk ke layar utama; jika tidak, pengguna harus login lewat `POST /login`. Navigasi utama memakai **Bottom Navigation** dengan 5 tab.
+
+```mermaid
+flowchart TD
+    A([Aplikasi Dimulai]) --> B{Token tersimpan?}
+    B -- Ya --> C[Muat permissions]
+    B -- Tidak --> E[Halaman Login]
+    C --> D([Layar Utama])
+    E --> F[Input email + kata sandi]
+    F --> G["POST /login"]
+    G --> H{Berhasil?}
+    H -- Tidak --> I[Tampilkan pesan error]
+    I --> F
+    H -- Ya --> J[Simpan token + muat permissions]
+    J --> D
+    D --> K[Bottom Navigation]
+    K --> K1[Beranda] --> L1[Dashboard ringkasan data akademik]
+    K --> K2[Mahasiswa] --> L2[CRUD data mahasiswa]
+    K --> K3[Prestasi] --> L3[Daftar, tambah, verifikasi + upload sertifikat]
+    K --> K4[Fuzzy] --> L4[Skor kualitas fuzzy Mamdani 0-100]
+    K --> K5[Lainnya] --> L5[Menu lainnya]
+    L5 --> M1[Pembayaran SPP]
+    L5 --> M2[Pengambilan Matakuliah]
+    L5 --> M3[Peminjaman Buku]
+    L5 --> M4[Activity Log]
+    L5 --> M5[Profil Saya]
+```
+
+> Catatan: menu **Activity Log**, **Pembayaran SPP**, **Pengambilan Matakuliah**, dan **Peminjaman Buku** hanya tampil pada layar *Lainnya* jika pengguna memiliki hak akses (permission) yang sesuai.
+
 ## API Service
 
 - Base URL tersimpan di `app_config.dart` dan dapat diubah lewat layar *Server Config*.
